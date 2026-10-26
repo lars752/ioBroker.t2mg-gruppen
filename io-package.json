@@ -1,0 +1,105 @@
+{
+    "common": {
+        "name": "t2mg-gruppen",
+        "version": "1.0.1",
+        "news": {
+            "1.0.1": {
+                "en": "Renamed to t2mg-gruppen",
+                "de": "Umbenannt in t2mg-gruppen"
+            },
+            "1.0.0": {
+                "en": "Initial release",
+                "de": "Erstveroeffentlichung"
+            }
+        },
+        "titleLang": {
+            "en": "T2MG groups",
+            "de": "T2MG Gruppen"
+        },
+        "desc": {
+            "en": "Assigns Trucki2MeanWell gateways (MQTT) to groups by serial number, mirrors charging power and readings and provides per-group total power",
+            "de": "Ordnet Trucki2MeanWell-Gateways (MQTT) per Seriennummer Gruppen zu, spiegelt Ladeleistung und Messwerte und stellt pro Gruppe die Gesamtleistung bereit"
+        },
+        "authors": [
+            "Lars"
+        ],
+        "keywords": [
+            "trucki",
+            "meanwell",
+            "group",
+            "charger",
+            "power"
+        ],
+        "license": "MIT",
+        "platform": "Javascript/Node.js",
+        "main": "main.js",
+        "icon": "t2mg-gruppen.png",
+        "enabled": true,
+        "extIcon": "https://raw.githubusercontent.com/lars752/ioBroker.t2mg-gruppen/main/admin/t2mg-gruppen.png",
+        "readme": "https://github.com/lars752/ioBroker.t2mg-gruppen/blob/main/README.md",
+        "loglevel": "info",
+        "mode": "daemon",
+        "type": "energy",
+        "compact": false,
+        "connectionType": "local",
+        "dataSource": "push",
+        "messagebox": true,
+        "supportedMessages": {
+            "custom": true
+        },
+        "adminUI": {
+            "config": "json"
+        },
+        "dependencies": [
+            {
+                "js-controller": ">=5.0.19"
+            }
+        ],
+        "globalDependencies": [
+            {
+                "admin": ">=6.12.2"
+            }
+        ]
+    },
+    "native": {
+        "sources": [
+            {
+                "enabled": true,
+                "adapter": "mqtt.0"
+            }
+        ],
+        "sourceAdapters": "mqtt.0",
+        "staleTimeoutSec": 0,
+        "pruneOnStart": true,
+        "powerScale": 1,
+        "outputScale": 1,
+        "maxPowerW": 1500,
+        "logWrites": false,
+        "devices": [],
+        "configJson": ""
+    },
+    "objects": [],
+    "instanceObjects": [
+        {
+            "_id": "info",
+            "type": "channel",
+            "common": {
+                "name": "Information"
+            },
+            "native": {}
+        },
+        {
+            "_id": "info.connection",
+            "type": "state",
+            "common": {
+                "role": "indicator.connected",
+                "name": "Mindestens ein Gateway liefert aktuelle Daten",
+                "type": "boolean",
+                "read": true,
+                "write": false,
+                "def": false
+            },
+            "native": {}
+        }
+    ]
+}

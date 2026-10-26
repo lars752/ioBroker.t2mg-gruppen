@@ -1,0 +1,251 @@
+{
+  "type": "tabs",
+  "i18n": false,
+  "items": {
+    "main": {
+      "type": "panel",
+      "label": {
+        "de": "Einstellungen",
+        "en": "Settings"
+      },
+      "items": {
+        "_hint": {
+          "type": "staticText",
+          "text": {
+            "de": "Ordnet Trucki2MeanWell-Gateways per Seriennummer (z. B. T2MG816EB1) Gruppen zu. Der Anzeigename (Lader1, Lader2, ...) wird je Gruppe automatisch vergeben; neue Geräte deshalb am Ende der Gruppe eintragen.",
+            "en": "Assigns Trucki2MeanWell gateways to groups by serial number (e.g. T2MG816EB1). The display name (Lader1, Lader2, ...) is assigned automatically per group; add new devices at the end of the group."
+          },
+          "newLine": true,
+          "sm": 12
+        },
+        "sources": {
+          "type": "table",
+          "label": {
+            "de": "Quell-Instanzen des MQTT-Adapters",
+            "en": "Source instances of the MQTT adapter"
+          },
+          "newLine": true,
+          "sm": 12,
+          "items": [
+            {
+              "attr": "enabled",
+              "type": "checkbox",
+              "title": {
+                "de": "Aktiv",
+                "en": "Enabled"
+              },
+              "width": "80px"
+            },
+            {
+              "attr": "adapter",
+              "type": "instance",
+              "title": {
+                "de": "Instanz",
+                "en": "Instance"
+              },
+              "allowAnyInstance": true,
+              "width": "100%"
+            }
+          ],
+          "buttons": [
+            "add",
+            "delete"
+          ]
+        },
+        "powerScale": {
+          "type": "number",
+          "label": {
+            "de": "Skalierung Vorgabe (SETPOINT)",
+            "en": "Scale setpoint (SETPOINT)"
+          },
+          "sm": 12,
+          "md": 3,
+          "help": {
+            "de": "1, falls das Gateway Watt erwartet",
+            "en": "1 if the gateway expects watts"
+          },
+          "newLine": true,
+          "min": 1e-06,
+          "max": 1000000
+        },
+        "outputScale": {
+          "type": "number",
+          "label": {
+            "de": "Skalierung Ladeleistung (ACSETPOINT)",
+            "en": "Scale charging power (ACSETPOINT)"
+          },
+          "sm": 12,
+          "md": 3,
+          "help": {
+            "de": "1, falls das Gateway Watt liefert",
+            "en": "1 if the gateway provides watts"
+          },
+          "min": 1e-06,
+          "max": 1000000
+        },
+        "maxPowerW": {
+          "type": "number",
+          "label": {
+            "de": "Maximale Sollleistung (W)",
+            "en": "Maximum setpoint (W)"
+          },
+          "sm": 12,
+          "md": 3,
+          "help": {
+            "de": "Größere Vorgaben werden begrenzt, zusätzlich auf MAXPOWER des Gateways; 0 = nur MAXPOWER",
+            "en": "Larger values are clamped, additionally to the gateway's MAXPOWER; 0 = MAXPOWER only"
+          },
+          "min": 0,
+          "max": 100000
+        },
+        "staleTimeoutSec": {
+          "type": "number",
+          "label": {
+            "de": "Gerät zählt nach X Sekunden ohne Update als 0 W (0 = aus)",
+            "en": "Device counts as 0 W after X seconds without update (0 = off)"
+          },
+          "sm": 12,
+          "md": 3,
+          "help": {
+            "de": "Gateway ohne Update zählt in der Gruppensumme als 0 W",
+            "en": "Gateway without update counts as 0 W in the group sum"
+          },
+          "min": 0,
+          "max": 86400
+        },
+        "pruneOnStart": {
+          "type": "checkbox",
+          "label": {
+            "de": "Beim Start nicht mehr konfigurierte Datenpunkte löschen",
+            "en": "Delete data points that are no longer configured on start"
+          },
+          "sm": 12,
+          "md": 6,
+          "newLine": true
+        },
+        "logWrites": {
+          "type": "checkbox",
+          "label": {
+            "de": "Weitergegebene Sollwerte im Log (Stufe info) ausgeben",
+            "en": "Log forwarded setpoints (level info)"
+          },
+          "sm": 12,
+          "md": 6
+        },
+        "_discoverBtn": {
+          "type": "sendTo",
+          "command": "discoverDevices",
+          "jsonData": "{\"config\": ${JSON.stringify(data)}}",
+          "useNative": true,
+          "variant": "outlined",
+          "label": {
+            "de": "Trucki-Gateways der Quell-Instanzen einlesen",
+            "en": "Read Trucki gateways of the source instances"
+          },
+          "tooltip": {
+            "de": "Ergänzt die Tabelle um gefundene Seriennummern. Die Gruppe danach selbst eintragen. Die Instanz muss laufen.",
+            "en": "Adds found serial numbers to the table. Enter the group yourself. The instance must be running."
+          },
+          "newLine": true,
+          "sm": 12,
+          "md": 6
+        },
+        "devices": {
+          "type": "table",
+          "label": {
+            "de": "Geräte und Gruppen",
+            "en": "Devices and groups"
+          },
+          "newLine": true,
+          "sm": 12,
+          "items": [
+            {
+              "type": "text",
+              "attr": "group",
+              "title": {
+                "de": "Gruppe",
+                "en": "Group"
+              },
+              "width": "35%",
+              "sort": true
+            },
+            {
+              "type": "text",
+              "attr": "serial",
+              "title": {
+                "de": "Seriennummer",
+                "en": "Serial number"
+              },
+              "width": "65%"
+            }
+          ]
+        }
+      }
+    },
+    "backup": {
+      "type": "panel",
+      "label": {
+        "de": "Import / Export",
+        "en": "Import / Export"
+      },
+      "items": {
+        "_info": {
+          "type": "staticText",
+          "text": {
+            "de": "Die Konfiguration lässt sich als JSON sichern, auf eine andere Instanz übertragen oder wiederherstellen. Die Instanz muss dafür laufen.",
+            "en": "The configuration can be saved as JSON, transferred to another instance or restored. The instance must be running."
+          },
+          "newLine": true,
+          "sm": 12
+        },
+        "_exportBtn": {
+          "type": "sendTo",
+          "command": "exportConfig",
+          "jsonData": "{\"config\": ${JSON.stringify(data)}}",
+          "useNative": true,
+          "variant": "outlined",
+          "label": {
+            "de": "Konfiguration als JSON exportieren",
+            "en": "Export configuration as JSON"
+          },
+          "tooltip": {
+            "de": "Schreibt die aktuelle Konfiguration (auch ungespeicherte Änderungen) in das Textfeld",
+            "en": "Writes the current configuration (including unsaved changes) into the text field"
+          },
+          "newLine": true,
+          "sm": 12,
+          "md": 6
+        },
+        "_importBtn": {
+          "type": "sendTo",
+          "command": "importConfig",
+          "jsonData": "{\"json\": ${JSON.stringify(data.configJson || \"\")}}",
+          "useNative": true,
+          "variant": "contained",
+          "label": {
+            "de": "JSON aus dem Textfeld importieren",
+            "en": "Import JSON from the text field"
+          },
+          "tooltip": {
+            "de": "Übernimmt die Konfiguration in das Formular; danach 'Speichern und schließen' drücken",
+            "en": "Applies the configuration to the form; then press 'Save and close'"
+          },
+          "sm": 12,
+          "md": 6
+        },
+        "configJson": {
+          "type": "text",
+          "label": {
+            "de": "Konfiguration (JSON): zum Sichern kopieren, zum Import einfügen",
+            "en": "Configuration (JSON): copy to back up, paste to import"
+          },
+          "minRows": 12,
+          "maxRows": 28,
+          "copyToClipboard": true,
+          "newLine": true,
+          "sm": 12
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "name": "iobroker.t2mg-gruppen",
+  "version": "1.0.1",
+  "description": "Ordnet Trucki2MeanWell-Gateways (MQTT) per Seriennummer Gruppen zu, spiegelt Ladeleistung und Messwerte und bildet pro Gruppe die Summe",
+  "author": "Lars",
+  "license": "MIT",
+  "homepage": "https://github.com/lars752/ioBroker.t2mg-gruppen",
+  "keywords": [
+    "ioBroker",
+    "trucki",
+    "meanwell",
+    "mqtt",
+    "gruppen",
+    "charger",
+    "power",
+    "energy"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lars752/ioBroker.t2mg-gruppen.git"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@iobroker/adapter-core": "^3.2.3"
+  },
+  "main": "main.js",
+  "files": [
+    "admin/",
+    "lib/",
+    "main.js",
+    "io-package.json",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "node test/test.js"
+  },
+  "bugs": {
+    "url": "https://github.com/lars752/ioBroker.t2mg-gruppen/issues"
+  },
+  "readmeFilename": "README.md"
+}
