@@ -60,7 +60,11 @@ const st = (val) => ({ val, ack: true });
         assert.ok(ids.includes('wohnung1.Lader1.SETPOINT'));
         assert.ok(ids.includes('wohnung2.info.Total_Power'));
         assert.strictEqual(m.states.find((s) => s.id === 'wohnung1.Lader1.STATE').common.type, 'string');
-        assert.strictEqual(m.states.length, 2 * (2 + 9 + 1));
+        assert.ok(ids.includes('wohnung1.Lader1.EEPROMWRITES'));
+        assert.ok(ids.includes('wohnung1.Lader1.REBOOT'));
+        assert.strictEqual(m.states.find((s) => s.id === 'wohnung1.Lader1.ZEPC').common.states[3], 'MQTT');
+        assert.strictEqual(m.states.find((s) => s.id === 'wohnung1.Lader1.REBOOT').common.type, 'boolean');
+        assert.strictEqual(m.states.length, 2 * (2 + 18 + 8));
     });
     await test('Discovery: Seriennummern aus mqtt.0-IDs, fremde Topics ignoriert', () => {
         const s = serialsFromIds([`${S1}.ACSETPOINT`, `${S1}.VBAT`, `${S2}.ACSETPOINT`, 'mqtt.0.shellies.foo.ACSETPOINTX', 'mqtt.0.tasmota.power', 'mqtt.1.T2MG999999-x.ACSETPOINT'], ['mqtt.0']);
@@ -119,6 +123,35 @@ const st = (val) => ({ val, ack: true });
         await core.handle(`${S1}.MAXPOWER`, st(1440));
         await core.writeBack('wohnung1.Lader1.SETPOINT', { val: 1000, ack: false });
         assert.strictEqual(src[`${S1}.ACSETPOINTOVR`], 500);
+    });
+    await test('Neue Messwerte: EEPROMWRITES, ZEPC, METER, VGRID u. a. werden gespiegelt', async () => {
+        const { w, core } = mk();
+        for (const [k, v] of [['EEPROMWRITES', 1234], ['ZEPC', 1], ['METER', -250], ['VGRID', 231.4], ['VOUTSET', 54.4], ['IOUTSET', 1.5], ['MINPOWER', 50], ['TARGETMIN', -20], ['TARGETMAX', 0]]) {
+            assert.strictEqual(await core.handle(`${S1}.${k}`, st(v)), 'ok', k);
+            assert.strictEqual(w[`wohnung1.Lader1.${k}`], v, k);
+        }
+    });
+    await test('Weitere Vorgaben: MINPOWER/TARGET/METER/ZEPC/REBOOT -> *OVR', async () => {
+        const { w, src, core } = mk();
+        await core.handle(`${S1}.VBAT`, st(52));
+        await core.writeBack('wohnung1.Lader1.MINPOWER_SET', { val: -10, ack: false });
+        assert.strictEqual(src[`${S1}.MINPOWEROVR`], 0);
+        await core.writeBack('wohnung1.Lader1.MAXPOWER_SET', { val: 900, ack: false });
+        assert.strictEqual(src[`${S1}.MAXPOWEROVR`], 900);
+        await core.writeBack('wohnung1.Lader1.TARGETMIN_SET', { val: -30, ack: false });
+        assert.strictEqual(src[`${S1}.TARGETMINOVR`], -30);
+        await core.writeBack('wohnung1.Lader1.TARGETMAX_SET', { val: 10, ack: false });
+        assert.strictEqual(src[`${S1}.TARGETMAXOVR`], 10);
+        await core.writeBack('wohnung1.Lader1.METER_SET', { val: -480, ack: false });
+        assert.strictEqual(src[`${S1}.METEROVR`], -480);
+        await core.writeBack('wohnung1.Lader1.ZEPC_SET', { val: 1, ack: false });
+        assert.strictEqual(src[`${S1}.ZEPCOVR`], 1);
+        assert.strictEqual(await core.writeBack('wohnung1.Lader1.ZEPC_SET', { val: 3, ack: false }), 'invalid');
+        assert.strictEqual(await core.writeBack('wohnung1.Lader1.REBOOT', { val: false, ack: false }), 'ignored');
+        await core.writeBack('wohnung1.Lader1.REBOOT', { val: true, ack: false });
+        assert.strictEqual(src[`${S1}.REBOOTOVR`], 'REBOOTOVR');
+        assert.strictEqual(w['wohnung1.Lader1.REBOOT'], false);
+        assert.strictEqual(await core.writeBack('wohnung1.Lader1.METER_SET', { val: true, ack: false }), 'invalid');
     });
     await test('Import/Export: Rundreise inkl. Quell-Tabelle', () => {
         const ex = exportConfig({ ...NATIVE, sources: [{ enabled: true, adapter: 'mqtt.1' }] });

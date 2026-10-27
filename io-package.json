@@ -1,8 +1,12 @@
 {
     "common": {
         "name": "t2mg-gruppen",
-        "version": "1.0.1",
+        "version": "1.1.0",
         "news": {
+            "1.1.0": {
+                "en": "All T2MG topics mirrored (VGRID, VOUTSET, IOUTSET, MINPOWER, TARGETMIN/MAX, METER, EEPROMWRITES, ZEPC); new writable controls for MINPOWER/MAXPOWER/TARGET/METER/ZEPC overrides and reboot",
+                "de": "Alle T2MG-Topics gespiegelt (VGRID, VOUTSET, IOUTSET, MINPOWER, TARGETMIN/MAX, METER, EEPROMWRITES, ZEPC); neue Vorgaben fuer MINPOWER/MAXPOWER/TARGET/METER/ZEPC und Neustart"
+            },
             "1.0.1": {
                 "en": "Renamed to t2mg-gruppen",
                 "de": "Umbenannt in t2mg-gruppen"
